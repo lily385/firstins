@@ -1,0 +1,470 @@
+{
+	"categories": [
+		{
+			"id": "third-party",
+			"name": "第三人責任險",
+			"addonSectionLabel": "第三人附加",
+			"addonSectionNote": "選擇主險後才能加買",
+			"types": [
+				{
+					"id": "third-party-main",
+					"name": "第三人主險",
+					"tooltip": "承保您的車輛造成第三人（對方駕駛、乘客、路人）的人身傷亡及財物損失，依強制險給付後超額部分由本險補足",
+					"description": "本車外的所有人都是第三人，超過強制險賠償上限的部分由本險補足賠償",
+					"mainOrAddon": "主險",
+					"parentMain": null,
+					"choiceGroup": null,
+					"defaultChecked": true,
+					"price": 6523,
+					"priceDiscount": 5653,
+					"tags": ["保對方"],
+					"optionMode": null,
+					"options": [],
+					"fields": [
+						{
+							"id": "f-31",
+							"label": "31 每人傷害/每事故之總額",
+							"tooltip": "10倍型：每人傷亡 300萬、每事故 3000萬；以強制險給付金額倍數計算賠償上限",
+							"tags": ["對方"],
+							"selects": [
+								{
+									"id": "s-31-1",
+									"choices": ["10倍型", "20倍型", "30倍型"],
+									"priceDelta": [0, 800, 1800],
+									"default": "10倍型"
+								},
+								{
+									"id": "s-31-2",
+									"choices": ["300萬元/3000萬元", "500萬元/5000萬元", "1000萬元/1億元"],
+									"priceDelta": [0, 400, 900],
+									"default": "300萬元/3000萬元"
+								}
+							]
+						},
+						{
+							"id": "f-32",
+							"label": "32 每事故之財損",
+							"tags": ["對方車或財物"],
+							"selects": [
+								{
+									"id": "s-32-1",
+									"choices": ["50萬元", "100萬元", "200萬元"],
+									"priceDelta": [0, 200, 450],
+									"default": "50萬元"
+								}
+							]
+						}
+					]
+				},
+				{
+					"id": "excess-liability",
+					"name": "超額責任險",
+					"mainOrAddon": "附加險",
+					"parentMain": "第三人主險",
+					"choiceGroup": null,
+					"defaultChecked": true,
+					"price": 1264,
+					"priceDiscount": 1095,
+					"tags": [],
+					"optionMode": "radio-always",
+					"options": [
+						{
+							"id": "opt-30",
+							"name": "30 第三人責任險附加超額責任險-乙式",
+							"tags": ["對方", "保我方乘客", "對方車或財物"],
+							"fields": [
+								{
+									"id": "f-30",
+									"label": "30 每次事故體傷/財損/乘客超額",
+									"selects": [
+										{
+											"id": "s-30-1",
+											"choices": ["1000萬元", "2000萬元", "3000萬元"],
+											"priceDelta": [0, 300, 600],
+											"default": "1000萬元"
+										}
+									]
+								}
+							]
+						},
+						{
+							"id": "opt-29",
+							"name": "29 第三人責任險附加超額責任險-甲式",
+							"tags": ["對方", "對方車或財物"],
+							"fields": [
+								{
+									"id": "f-29",
+									"label": "29 每次事故體傷/財損超額",
+									"selects": [
+										{
+											"id": "s-29-1",
+											"choices": ["1000萬元", "2000萬元", "3000萬元"],
+											"priceDelta": [0, 300, 600],
+											"default": "1000萬元"
+										}
+									]
+								}
+							]
+						}
+					],
+					"fields": []
+				},
+				{
+					"id": "driver-injury-passenger",
+					"name": "駕駛人傷害險 & 乘客體傷責任險",
+					"description": "須一起投保，不可單獨加購",
+					"tooltip": "同時承保駕駛人本身的意外傷亡，以及對車上乘客的人身賠償責任",
+					"mainOrAddon": "附加險",
+					"parentMain": "第三人主險",
+					"choiceGroup": null,
+					"defaultChecked": true,
+					"price": 2326,
+					"priceDiscount": 2016,
+					"tags": [],
+					"optionMode": "always",
+					"options": [
+						{
+							"id": "opt-49",
+							"name": "49 駕駛人傷害險",
+							"tooltip": "承保您（駕駛本人）發生事故時的住院補貼及死亡失能給付",
+							"tags": ["保自己"],
+							"fields": [
+								{
+									"id": "f-49",
+									"label": "住院日額保險金/每人死亡及失能",
+									"selects": [
+										{
+											"id": "s-49-1",
+											"choices": ["2000元", "1500元", "1000元", "500元"],
+											"priceDelta": [0, -200, -400, -600],
+											"default": "2000元"
+										},
+										{
+											"id": "s-49-2",
+											"choices": ["300萬元", "200萬元", "100萬元"],
+											"priceDelta": [0, -200, -400],
+											"default": "300萬元"
+										}
+									]
+								}
+							]
+						},
+						{
+							"id": "opt-5B",
+							"name": "5B 乘客體傷責任險",
+							"tooltip": "承保您車上乘客發生事故時的人身傷亡賠償責任，依保額及保障人數計算",
+							"tags": ["保我方乘客"],
+							"fields": [
+								{
+									"id": "f-5B",
+									"label": "每一人傷害 ｜ 每一事故之傷害",
+									"selects": [
+										{
+											"id": "s-5B-1",
+											"choices": ["300萬元", "200萬元", "100萬元"],
+											"priceDelta": [0, -150, -300],
+											"default": "300萬元"
+										},
+										{
+											"id": "s-5B-2",
+											"choices": ["4人", "3人", "2人", "1人"],
+											"priceDelta": [0, -100, -200, -300],
+											"default": "4人"
+										}
+									]
+								}
+							]
+						}
+					],
+					"fields": []
+				},
+				{
+					"id": "3P",
+					"name": "3P 第三人失能增額附加條款",
+					"mainOrAddon": "附加險",
+					"parentMain": "第三人主險",
+					"choiceGroup": null,
+					"defaultChecked": true,
+					"price": 346,
+					"priceDiscount": 300,
+					"tags": ["對方"],
+					"optionMode": null,
+					"options": [],
+					"fields": [
+						{
+							"id": "f-3P",
+							"label": "每一個人失能增額",
+							"selects": [
+								{
+									"id": "s-3P-1",
+									"choices": ["2倍型", "3倍型", "4倍型"],
+									"priceDelta": [0, 80, 180],
+									"default": "2倍型"
+								}
+							]
+						}
+					]
+				},
+				{
+					"id": "2A",
+					"name": "2A 第三人附加慰問金費用",
+					"mainOrAddon": "附加險",
+					"parentMain": "第三人主險",
+					"choiceGroup": null,
+					"defaultChecked": false,
+					"price": null,
+					"priceDiscount": null,
+					"tags": ["額外保障"],
+					"optionMode": null,
+					"options": [],
+					"fields": []
+				},
+				{
+					"id": "3Q",
+					"name": "3Q 律師費用補償附加條款",
+					"mainOrAddon": "附加險",
+					"parentMain": "第三人主險",
+					"choiceGroup": null,
+					"defaultChecked": false,
+					"price": null,
+					"priceDiscount": null,
+					"tags": ["額外保障"],
+					"optionMode": null,
+					"options": [],
+					"fields": []
+				}
+			]
+		},
+		{
+			"id": "body-main",
+			"name": "車體主險",
+			"addonSectionLabel": "車體險附加",
+			"addonSectionNote": "選擇車體主險後才能加買",
+			"types": [
+				{
+					"id": "body-loss",
+					"name": "車體損失險",
+					"mainOrAddon": "主險",
+					"parentMain": null,
+					"choiceGroup": null,
+					"defaultChecked": false,
+					"price": 46625,
+					"priceDiscount": 40408,
+					"tags": [],
+					"optionMode": "radio-always",
+					"options": [
+						{
+							"id": "opt-01",
+							"name": "01 甲式車體損失險",
+							"tags": ["保本車"],
+							"fields": [
+								{
+									"id": "f-01-amt",
+									"label": "保險金額",
+									"selects": [
+										{
+											"id": "s-01-amt",
+											"choices": ["235.5萬元", "200萬元", "150萬元", "100萬元"],
+											"priceDelta": [0, -2000, -4500, -8000],
+											"default": "235.5萬元"
+										}
+									]
+								},
+								{
+									"id": "f-01-ded",
+									"label": "自負額",
+									"selects": [
+										{
+											"id": "s-01-ded",
+											"choices": ["3仟/5仟/7仟", "5仟/1萬/1.5萬", "1萬/2萬/3萬"],
+											"priceDelta": [0, -300, -700],
+											"default": "3仟/5仟/7仟"
+										}
+									]
+								}
+							]
+						},
+						{
+							"id": "opt-05",
+							"name": "05 乙式車體損失險",
+							"tags": ["保本車"],
+							"fields": [
+								{
+									"id": "f-05-amt",
+									"label": "保險金額",
+									"selects": [
+										{
+											"id": "s-05-amt",
+											"choices": ["235.5萬元", "200萬元", "150萬元", "100萬元"],
+											"priceDelta": [0, -2000, -4500, -8000],
+											"default": "235.5萬元"
+										}
+									]
+								},
+								{
+									"id": "f-05-ded",
+									"label": "自負額",
+									"selects": [
+										{
+											"id": "s-05-ded",
+											"choices": ["免自負額", "1萬", "2萬"],
+											"priceDelta": [0, -600, -1200],
+											"default": "免自負額"
+										}
+									]
+								}
+							]
+						},
+						{
+							"id": "opt-07",
+							"name": "07 丙式車體損失險",
+							"tags": ["保本車"],
+							"fields": [
+								{
+									"id": "f-07-amt",
+									"label": "保險金額",
+									"selects": [
+										{
+											"id": "s-07-amt",
+											"choices": ["235.5萬元", "200萬元", "150萬元", "100萬元"],
+											"priceDelta": [0, -2000, -4500, -8000],
+											"default": "235.5萬元"
+										}
+									]
+								},
+								{
+									"id": "f-07-ded",
+									"label": "自負額",
+									"selects": [
+										{
+											"id": "s-07-ded",
+											"choices": ["免自負額", "1萬", "2萬"],
+											"priceDelta": [0, -600, -1200],
+											"default": "免自負額"
+										}
+									]
+								}
+							]
+						},
+						{
+							"id": "opt-0Z",
+							"name": "0Z 限額車對車碰撞損失保險-自用",
+							"tags": ["保本車"],
+							"fields": [
+								{
+									"id": "f-0Z-amt",
+									"label": "保險金額",
+									"selects": [
+										{
+											"id": "s-0Z-amt",
+											"choices": ["20萬", "30萬", "50萬", "70萬"],
+											"priceDelta": [0, 800, 2000, 3500],
+											"default": "20萬"
+										}
+									]
+								},
+								{
+									"id": "f-0Z-ded",
+									"label": "自負額",
+									"selects": [
+										{
+											"id": "s-0Z-ded",
+											"choices": ["免自負額", "5仟"],
+											"priceDelta": [0, -300],
+											"default": "免自負額"
+										}
+									]
+								}
+							]
+						}
+					],
+					"fields": []
+				},
+				{
+					"id": "0Y",
+					"name": "0Y 新限額不明損失附加條款",
+					"mainOrAddon": "附加險",
+					"parentMain": "車體損失險",
+					"choiceGroup": null,
+					"defaultChecked": false,
+					"price": null,
+					"priceDiscount": null,
+					"tags": [],
+					"optionMode": null,
+					"options": [],
+					"fields": []
+				},
+				{
+					"id": "02",
+					"name": "02 颱風、地震、海嘯、冰雹、洪水或因雨積水險",
+					"mainOrAddon": "附加險",
+					"parentMain": "車體損失險",
+					"choiceGroup": null,
+					"defaultChecked": false,
+					"price": null,
+					"priceDiscount": null,
+					"tags": ["保本車"],
+					"optionMode": null,
+					"options": [],
+					"fields": []
+				},
+				{
+					"id": "03",
+					"name": "03 罷工、暴動、民眾騷擾險",
+					"mainOrAddon": "附加險",
+					"parentMain": "車體損失險",
+					"choiceGroup": null,
+					"defaultChecked": false,
+					"price": null,
+					"priceDiscount": null,
+					"tags": ["保本車"],
+					"optionMode": null,
+					"options": [],
+					"fields": []
+				},
+				{
+					"id": "09",
+					"name": "09 車體險全損理賠無折舊",
+					"mainOrAddon": "附加險",
+					"parentMain": "車體損失險",
+					"choiceGroup": null,
+					"defaultChecked": false,
+					"price": null,
+					"priceDiscount": null,
+					"tags": ["保本車"],
+					"optionMode": null,
+					"options": [],
+					"fields": []
+				},
+				{
+					"id": "0D",
+					"name": "0D 車體損失險許可使用免追值附加條款",
+					"mainOrAddon": "附加險",
+					"parentMain": "車體損失險",
+					"choiceGroup": "GROUP A",
+					"defaultChecked": false,
+					"price": null,
+					"priceDiscount": null,
+					"tags": ["保本車"],
+					"optionMode": null,
+					"options": [],
+					"fields": []
+				},
+				{
+					"id": "CB06",
+					"name": "CB06 約定駕駛人條款",
+					"mainOrAddon": "附加險",
+					"parentMain": "車體損失險",
+					"choiceGroup": "GROUP A",
+					"defaultChecked": false,
+					"price": null,
+					"priceDiscount": null,
+					"tags": ["保本車"],
+					"optionMode": null,
+					"options": [],
+					"fields": []
+				}
+			]
+		}
+	]
+}

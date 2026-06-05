@@ -1,0 +1,13 @@
+node_modules/
+dist/
+.claude/
+*.local
+
+# Editor
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
