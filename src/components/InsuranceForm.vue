@@ -67,7 +67,7 @@
 						<div v-if="type.description" class="mt-1 ml-6 text-xs text-red-600">{{ type.description }}</div>
 
 						<!-- Expanded content when checked -->
-						<div v-if="state[type.id].checked" class="mt-3 ml-6 space-y-4">
+						<div v-if="state[type.id].checked && (type.options.length || type.fields.length)" class="mt-3 ml-6 space-y-4">
 							<!-- radio: pick one option, show only selected option's fields -->
 							<template v-if="type.optionMode === 'radio'">
 								<div v-for="opt in type.options" :key="opt.id" class="space-y-2">
@@ -89,7 +89,7 @@
 									</label>
 									<div v-if="state[type.id].selectedOption === opt.id && opt.fields.length" class="ml-6 space-y-3">
 										<div v-for="field in opt.fields" :key="field.id" class="space-y-1">
-											<div class="flex items-center gap-2 text-xs text-gray-500 flex-wrap">
+											<div class="flex items-center gap-2 text-xs text-gray-800 font-semibold flex-wrap">
 												<span>{{ field.label }}</span>
 												<InfoTooltip :text="field.tooltip" />
 												<Badge v-for="tag in field.tags" :key="tag" variant="secondary">{{ tag }}</Badge>
@@ -130,7 +130,7 @@
 									</label>
 									<div v-if="opt.fields.length" class="ml-6 space-y-3">
 										<div v-for="field in opt.fields" :key="field.id" class="space-y-1">
-											<div class="flex items-center gap-2 text-xs text-gray-500 flex-wrap">
+											<div class="flex items-center gap-2 text-xs text-gray-800 font-semibold flex-wrap">
 												<span>{{ field.label }}</span>
 												<InfoTooltip :text="field.tooltip" />
 												<Badge v-for="tag in field.tags" :key="tag" variant="secondary">{{ tag }}</Badge>
@@ -171,7 +171,7 @@
 									</div>
 									<div class="ml-2 space-y-3">
 										<div v-for="field in opt.fields" :key="field.id" class="space-y-1">
-											<div class="flex items-center gap-2 text-xs text-gray-500 flex-wrap">
+											<div class="flex items-center gap-2 text-xs text-gray-800 font-semibold flex-wrap">
 												<span>{{ field.label }}</span>
 												<InfoTooltip :text="field.tooltip" />
 												<Badge v-for="tag in field.tags" :key="tag" variant="secondary">{{ tag }}</Badge>
@@ -194,7 +194,7 @@
 							<!-- no options: direct fields -->
 							<template v-else>
 								<div v-for="field in type.fields" :key="field.id" class="space-y-1">
-									<div class="flex items-center gap-2 text-xs text-gray-500 flex-wrap">
+									<div class="flex items-center gap-2 text-xs text-gray-800 font-semibold flex-wrap">
 										<span>{{ field.label }}</span>
 										<InfoTooltip :text="field.tooltip" />
 										<Badge v-for="tag in field.tags" :key="tag" variant="secondary">{{ tag }}</Badge>
