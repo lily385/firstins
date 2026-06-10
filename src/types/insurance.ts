@@ -41,6 +41,7 @@ export interface InsuranceType {
 export interface Category {
 	id: string
 	name: string
+	description?: string
 	note?: string
 	addonSectionLabel?: string
 	addonSectionNote?: string

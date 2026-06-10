@@ -1,25 +1,25 @@
 <template>
-  <div class="min-h-screen bg-gray-50">
-    <!-- Tab bar -->
-    <div class="flex gap-1 border-b border-gray-200 bg-white px-4 pt-4">
+  <div class="min-h-screen bg-gray-50 pr-24">
+    <InsuranceForm v-if="active === 'form'" />
+    <InsuranceTable v-else-if="active === 'table'" />
+    <InsuranceAdmin v-else />
+
+    <!-- 右側浮動選單 -->
+    <div class="fixed right-4 top-1/2 -translate-y-1/2 z-50 flex flex-col gap-1 bg-white rounded-xl shadow-lg border border-gray-200 p-1.5">
       <button
         v-for="tab in tabs"
         :key="tab.id"
         @click="active = tab.id"
         :class="[
-          'px-4 py-2 text-sm font-medium rounded-t border',
+          'px-3 py-2 text-sm font-medium rounded-lg text-left transition-colors whitespace-nowrap',
           active === tab.id
-            ? 'bg-white border-b-white text-green-700 border-gray-200'
-            : 'bg-gray-100 border-transparent text-gray-500 hover:text-gray-700'
+            ? 'bg-cyan-900 text-white'
+            : 'text-gray-600 hover:bg-cyan-50'
         ]"
       >
         {{ tab.label }}
       </button>
     </div>
-
-    <InsuranceForm v-if="active === 'form'" />
-    <InsuranceTable v-else-if="active === 'table'" />
-    <InsuranceAdmin v-else />
   </div>
 </template>
 

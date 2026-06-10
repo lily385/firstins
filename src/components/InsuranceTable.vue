@@ -17,7 +17,7 @@
           <td
             v-if="row.showCategory"
             :rowspan="row.categoryRowspan"
-            class="border border-gray-300 px-3 py-2 font-medium text-blue-700 align-top"
+            class="border border-gray-300 px-3 py-2 font-medium text-cyan-900 align-top"
           >
             {{ row.categoryName }}
           </td>
@@ -34,8 +34,8 @@
           <td class="border border-gray-300 px-3 py-2">
             <span
               :class="row.mainOrAddon === '主險'
-                ? 'text-green-700 font-medium'
-                : 'text-orange-600'"
+                ? 'text-cyan-900 font-medium'
+                : 'text-cyan-800'"
             >
               {{ row.mainOrAddon }}
             </span>

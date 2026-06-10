@@ -13,7 +13,7 @@
 
 		<!-- Categories -->
 		<section v-for="cat in data.categories" :key="cat.id" class="space-y-3">
-			<div class="flex items-center gap-2 bg-gray-700 border border-gray-700 rounded px-4 py-2.5">
+			<div class="flex items-center gap-2 bg-cyan-900 border border-cyan-900 rounded px-4 py-2.5">
 				<span class="font-bold text-white">{{ cat.name }}</span>
 			</div>
 
@@ -117,7 +117,7 @@
 											type="text"
 											:value="choice"
 											@change="updateChoice(item.sel, idx, ($event.target as HTMLInputElement).value)"
-											class="w-full border border-gray-300 rounded px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-green-500"
+											class="w-full border border-gray-300 rounded px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-cyan-900"
 										/>
 									</td>
 									<td class="py-1 pr-3">
@@ -125,7 +125,7 @@
 											type="number"
 											:value="item.sel.priceDelta?.[idx] ?? 0"
 											@change="updateDelta(item.sel, idx, Number(($event.target as HTMLInputElement).value))"
-											class="w-full border border-gray-300 rounded px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-green-500"
+											class="w-full border border-gray-300 rounded px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-cyan-900"
 										/>
 									</td>
 									<td class="py-1 text-right">

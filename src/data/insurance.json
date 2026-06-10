@@ -3,6 +3,7 @@
 		{
 			"id": "third-party",
 			"name": "第三人責任險",
+			"description": "本車外的所有人，都是第三人（對方駕駛／對方乘客／路人）。超過強制險賠償範圍外的，就由第三人責任險來賠。",
 			"addonSectionLabel": "第三人附加",
 			"addonSectionNote": "選擇主險後才能加買",
 			"types": [
@@ -10,7 +11,7 @@
 					"id": "third-party-main",
 					"name": "第三人主險",
 					"tooltip": "承保您的車輛造成第三人（對方駕駛、乘客、路人）的人身傷亡及財物損失，依強制險給付後超額部分由本險補足",
-					"description": "本車外的所有人都是第三人，超過強制險賠償上限的部分由本險補足賠償",
+					"description": null,
 					"mainOrAddon": "主險",
 					"parentMain": null,
 					"choiceGroup": null,
@@ -238,6 +239,7 @@
 		{
 			"id": "body-main",
 			"name": "車體主險",
+			"description": "承保車輛因碰撞、火災、天災等事故造成的損失，依所選方案範圍理賠修復費用或車輛實際現值。",
 			"addonSectionLabel": "車體險附加",
 			"addonSectionNote": "選擇車體主險後才能加買",
 			"types": [
