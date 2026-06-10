@@ -1,5 +1,6 @@
 <template>
-  <div class="min-h-screen bg-gray-50 pr-24">
+  <div class="min-h-screen bg-gray-50">
+    <AppHeader />
     <InsuranceForm v-if="active === 'form'" />
     <InsuranceTable v-else-if="active === 'table'" />
     <InsuranceAdmin v-else />
@@ -11,7 +12,7 @@
         :key="tab.id"
         @click="active = tab.id"
         :class="[
-          'px-3 py-2 text-sm font-medium rounded-lg text-left transition-colors whitespace-nowrap',
+          'px-2 py-3 text-sm font-medium rounded-lg transition-colors cursor-pointer [writing-mode:vertical-rl]',
           active === tab.id
             ? 'bg-cyan-900 text-white'
             : 'text-gray-600 hover:bg-cyan-50'
@@ -25,6 +26,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
+import AppHeader from './components/AppHeader.vue'
 import InsuranceForm from './components/InsuranceForm.vue'
 import InsuranceTable from './components/InsuranceTable.vue'
 import InsuranceAdmin from './components/InsuranceAdmin.vue'
