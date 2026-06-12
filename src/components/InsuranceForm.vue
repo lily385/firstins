@@ -29,12 +29,58 @@
 						<span v-if="cat.addonSectionNote" class="text-sm text-gray-300">{{ cat.addonSectionNote }}</span>
 					</div>
 
-					<!-- choiceGroup 擇一標題 -->
-					<div v-if="isChoiceGroupStart(type, cat)" class="px-4 pt-3 pb-1 text-xs text-gray-500 font-medium">
-						下列商品擇一購買
-					</div>
+					<!-- Choice group start → RadioGroup；non-start → 跳過；普通 type → Checkbox -->
+					<template v-if="type.choiceGroup && isChoiceGroupStart(type, cat)">
+						<div class="px-4 pt-3 pb-1 text-xs text-gray-500 font-medium">下列商品擇一購買</div>
+						<RadioGroup
+							:model-value="choiceGroupValue(cat, type.choiceGroup)"
+							@update:model-value="(val) => onChoiceGroupChange(cat, String(val))"
+						>
+							<div
+								v-for="gType in choiceGroupTypes(cat, type.choiceGroup)"
+								:key="gType.id"
+								class="px-4 py-4 transition-opacity border-t border-gray-100"
+								:class="{ 'opacity-40 pointer-events-none': !isEnabled(gType) }"
+							>
+								<div class="flex items-start gap-3">
+									<label class="flex items-center gap-3 cursor-pointer select-none flex-wrap flex-1" :for="`type-${gType.id}`">
+										<RadioGroupItem :id="`type-${gType.id}`" :value="gType.id" />
+										<span class="flex items-center gap-1">
+											<span class="text-lg font-semibold text-gray-800">{{ gType.name }}</span>
+											<InfoTooltip :text="gType.tooltip" />
+										</span>
+										<span v-if="gType.tags.length" class="flex items-center gap-1 flex-wrap">
+											<Badge v-for="tag in gType.tags" :key="tag" variant="secondary">{{ tag }}</Badge>
+										</span>
+									</label>
+									<!-- Desktop price -->
+									<span v-if="gType.priceDiscount !== null" class="hidden sm:flex flex-col items-end gap-1 shrink-0" :class="{ 'opacity-40': !state[gType.id].checked }">
+										<span class="flex items-baseline gap-1">
+											<span class="text-base text-cyan-900">網路優惠</span>
+											<span class="text-xl text-cyan-900">{{ formatPrice(effectivePrices[gType.id]!) }}</span><span class="text-sm text-cyan-900">元</span>
+										</span>
+										<span class="text-sm text-gray-400 line-through">
+											{{ formatPrice(effectiveOriginalPrices[gType.id]!) }} 元
+										</span>
+									</span>
+								</div>
+								<!-- description note -->
+								<div v-if="gType.description" class="mt-1 ml-8 text-xs text-red-600">{{ gType.description }}</div>
+								<!-- Mobile price -->
+								<div v-if="gType.priceDiscount !== null" class="flex sm:hidden flex-col items-end gap-1 mt-4" :class="{ 'opacity-40': !state[gType.id].checked }">
+									<span class="flex items-baseline gap-1">
+										<span class="text-base text-cyan-900">網路優惠</span>
+										<span class="text-xl text-cyan-900">{{ formatPrice(effectivePrices[gType.id]!) }}</span><span class="text-sm text-cyan-900">元</span>
+									</span>
+									<span class="text-sm text-gray-400 line-through">
+										{{ formatPrice(effectiveOriginalPrices[gType.id]!) }} 元
+									</span>
+								</div>
+							</div>
+						</RadioGroup>
+					</template>
 
-					<div class="px-4 py-4 transition-opacity" :class="{ 'opacity-40 pointer-events-none': !isEnabled(type) }">
+					<div v-else-if="!type.choiceGroup" class="px-4 py-4 transition-opacity" :class="{ 'opacity-40 pointer-events-none': !isEnabled(type) }">
 						<!-- Checkbox row + desktop price -->
 						<div class="flex items-start gap-3">
 							<label class="flex items-center gap-3 cursor-pointer select-none flex-wrap flex-1" :for="`type-${type.id}`">
@@ -329,6 +375,22 @@ function resetBar() {
 function handleToggle(type: import('../types/insurance').InsuranceType, newChecked: boolean) {
 	setTypeChecked(type, newChecked)
 	if (isCalculated.value) resetBar()
+}
+
+function choiceGroupTypes(cat: Category, groupId: string) {
+	return cat.types.filter((t) => t.choiceGroup === groupId)
+}
+
+function choiceGroupValue(cat: Category, groupId: string): string {
+	return cat.types.find((t) => t.choiceGroup === groupId && state[t.id].checked)?.id ?? ''
+}
+
+function onChoiceGroupChange(cat: Category, typeId: string): void {
+	const type = cat.types.find((t) => t.id === typeId)
+	if (type) {
+		setTypeChecked(type, true)
+		if (isCalculated.value) resetBar()
+	}
 }
 
 // Reset action bar whenever any select value changes
