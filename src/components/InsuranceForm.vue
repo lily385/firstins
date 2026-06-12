@@ -1,5 +1,5 @@
 ﻿<template>
-	<div class="max-w-3xl mx-auto py-6 px-4 space-y-6">
+	<div class="max-w-5xl mx-auto py-6 px-4 space-y-6 pb-20">
 		<AppStepper
 			:steps="[{ label: '車主&車輛資料' }, { label: '選擇方案&商品' }, { label: '填寫&確認資料' }, { label: '付款' }]"
 			:current="2"
@@ -13,7 +13,7 @@
 			</div>
 
 			<!-- Types list -->
-			<div class="bg-white border border-gray-200 rounded-lg overflow-hidden divide-y divide-gray-100">
+			<div class="bg-white border border-gray-200 rounded-lg overflow-hidden divide-y divide-gray-100 shadow-md">
 				<!-- Category header -->
 				<div class="bg-cyan-900 px-4 py-2.5">
 					<span class="font-bold text-white text-sm">{{ cat.name }}</span>
@@ -41,7 +41,7 @@
 								type="checkbox"
 								class="w-4 h-4 accent-cyan-900"
 								:checked="state[type.id].checked"
-								@change="toggleType(type)"
+								@change="handleToggle(type)"
 							/>
 							<span class="flex items-center gap-1">
 								<span class="font-semibold text-gray-800">{{ type.name }}</span>
@@ -217,9 +217,41 @@
 			</div>
 		</section>
 	</div>
+
+	<LoadingOverlay v-if="isLoading" />
+
+	<!-- Fixed Action Bar -->
+	<div class="fixed bottom-0 left-0 right-0 z-40 bg-white border-t border-gray-200 shadow-[0_-4px_12px_rgba(0,0,0,0.1)]">
+		<div class="max-w-3xl mx-auto px-6 py-5 flex items-center">
+			<!-- buttons: fixed-width, left-aligned, proportional to reference (250/780 ≈ 32%) -->
+			<div class="flex items-center gap-6 shrink-0">
+				<button class="w-60 py-2 rounded-lg border-2 border-cyan-900 text-cyan-900 text-lg font-semibold hover:bg-cyan-50 transition-colors cursor-pointer">
+					上一步
+				</button>
+				<button @click="calculate" class="w-60 py-2 rounded-lg bg-cyan-900 text-white text-lg font-semibold hover:bg-cyan-800 transition-colors cursor-pointer">
+					{{ isCalculated ? '下一步' : '試算保費' }}
+				</button>
+			</div>
+			<!-- price info: ml-auto pushes to right, two-column label/value layout -->
+			<div class="ml-auto shrink-0 w-52 pl-8">
+				<div class="flex items-center justify-between gap-3">
+					<span class="text-xs text-gray-500 whitespace-nowrap">優惠金額</span>
+					<span class="text-red-600 font-semibold text-sm whitespace-nowrap">
+						{{ totalDiscount !== null && totalDiscount > 0 ? `- ${formatPrice(totalDiscount)}` : '-' }} 元
+					</span>
+				</div>
+				<div class="flex items-baseline justify-between gap-3 mt-0.5">
+					<span class="text-lg font-bold text-gray-900 whitespace-nowrap">總保費</span>
+					<span class="text-lg font-bold text-gray-900 whitespace-nowrap">{{ totalPremium !== null ? formatPrice(totalPremium) : '-' }} 元</span>
+				</div>
+			</div>
+		</div>
+	</div>
 </template>
 
 <script setup lang="ts">
+import { ref } from 'vue'
+import LoadingOverlay from './LoadingOverlay.vue'
 import { insuranceData } from '../store/insuranceStore'
 import { useInsuranceForm } from '../composables/useInsuranceForm'
 import { formatPrice } from '../utils/formatters'
@@ -234,4 +266,39 @@ const data = insuranceData as unknown as { categories: Category[] }
 
 const { state, effectivePrices, effectiveOriginalPrices, isEnabled, toggleType, isChoiceGroupStart } =
 	useInsuranceForm(data)
+
+const totalPremium = ref<number | null>(null)
+const totalDiscount = ref<number | null>(null)
+const isLoading = ref(false)
+const isCalculated = ref(false)
+
+function handleToggle(type: import('../types/insurance').InsuranceType) {
+	toggleType(type)
+	if (isCalculated.value) {
+		isCalculated.value = false
+		totalPremium.value = null
+		totalDiscount.value = null
+	}
+}
+
+async function calculate() {
+	isLoading.value = true
+	await new Promise(resolve => setTimeout(resolve, 2000))
+	let premium = 0
+	let discount = 0
+	for (const cat of data.categories) {
+		for (const type of cat.types) {
+			const price = effectivePrices.value[type.id]
+			const orig = effectiveOriginalPrices.value[type.id]
+			if (state[type.id]?.checked && price != null) {
+				premium += price
+				if (orig != null) discount += orig - price
+			}
+		}
+	}
+	totalPremium.value = premium
+	totalDiscount.value = discount
+	isLoading.value = false
+	isCalculated.value = true
+}
 </script>

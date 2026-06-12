@@ -12,10 +12,10 @@
         :key="tab.id"
         @click="active = tab.id"
         :class="[
-          'px-2 py-3 text-sm font-medium rounded-lg transition-colors cursor-pointer [writing-mode:vertical-rl]',
+          'px-2 py-3 text-sm font-medium rounded-lg transition-colors cursor-pointer [writing-mode:vertical-rl] border-l-2',
           active === tab.id
-            ? 'bg-cyan-900 text-white'
-            : 'text-gray-600 hover:bg-cyan-50'
+            ? 'border-red-600 text-cyan-900 font-semibold'
+            : 'border-transparent text-gray-600 hover:bg-cyan-50'
         ]"
       >
         {{ tab.label }}

@@ -10,7 +10,7 @@ defineProps<{
 </script>
 
 <template>
-  <div class="px-4 pb-6">
+  <div class="pb-6">
     <h2 class="text-2xl font-bold text-gray-900 mb-4">{{ planName }}</h2>
     <Card>
       <CardContent class="py-2">
