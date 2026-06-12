@@ -307,7 +307,8 @@
 		</section>
 	</div>
 
-	<LoadingOverlay v-if="isLoading" />
+	<LoadingOverlay v-if="isLoading" :message="loadingMessage" />
+	<SuccessOverlay v-if="isCompleted" />
 
 	<!-- Fixed Action Bar -->
 	<div class="fixed bottom-0 left-0 right-0 z-40 bg-white border-t border-gray-200 shadow-[0_-4px_12px_rgba(0,0,0,0.1)]">
@@ -332,7 +333,7 @@
 				<button class="flex-1 sm:flex-none sm:w-60 py-2 rounded-lg border-2 border-cyan-900 text-cyan-900 text-lg font-semibold hover:bg-cyan-50 transition-colors cursor-pointer">
 					上一步
 				</button>
-				<button @click="calculate" class="flex-1 sm:flex-none sm:w-60 py-2 rounded-lg bg-cyan-900 text-white text-lg font-semibold hover:bg-cyan-800 transition-colors cursor-pointer">
+				<button @click="isCalculated ? submitNext() : calculate()" class="flex-1 sm:flex-none sm:w-60 py-2 rounded-lg bg-cyan-900 text-white text-lg font-semibold hover:bg-cyan-800 transition-colors cursor-pointer">
 					{{ isCalculated ? '下一步' : '試算保費' }}
 				</button>
 			</div>
@@ -343,6 +344,7 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
 import LoadingOverlay from './LoadingOverlay.vue'
+import SuccessOverlay from './SuccessOverlay.vue'
 import { insuranceData } from '../store/insuranceStore'
 import { useInsuranceForm } from '../composables/useInsuranceForm'
 import { formatPrice } from '../utils/formatters'
@@ -358,13 +360,15 @@ import PlanHeader from './PlanHeader.vue'
 // insuranceData is readonly; cast to mutable for the composable which only reads from it
 const data = insuranceData as unknown as { categories: Category[] }
 
-const { state, effectivePrices, effectiveOriginalPrices, isEnabled, setTypeChecked, isChoiceGroupStart } =
+const { state, effectivePrices, effectiveOriginalPrices, isEnabled, setTypeChecked, isChoiceGroupStart, resetState } =
 	useInsuranceForm(data)
 
 const totalPremium = ref<number | null>(null)
 const totalDiscount = ref<number | null>(null)
 const isLoading = ref(false)
+const loadingMessage = ref('試算中，請稍候…')
 const isCalculated = ref(false)
+const isCompleted = ref(false)
 
 function resetBar() {
 	isCalculated.value = false
@@ -396,7 +400,20 @@ function onChoiceGroupChange(cat: Category, typeId: string): void {
 // Reset action bar whenever any select value changes
 watch(() => state, () => { if (isCalculated.value) resetBar() }, { deep: true })
 
+async function submitNext() {
+	loadingMessage.value = '投保中，請稍候…'
+	isLoading.value = true
+	await new Promise(r => setTimeout(r, 1500))
+	isLoading.value = false
+	isCompleted.value = true
+	await new Promise(r => setTimeout(r, 2500))
+	isCompleted.value = false
+	resetBar()
+	resetState()
+}
+
 async function calculate() {
+	loadingMessage.value = '試算中，請稍候…'
 	isLoading.value = true
 	await new Promise(resolve => setTimeout(resolve, 2000))
 	let premium = 0

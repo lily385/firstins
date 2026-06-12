@@ -99,6 +99,27 @@ export function useInsuranceForm(data: { categories: Category[] }) {
 		return cat.types.find((t) => t.choiceGroup === type.choiceGroup)?.id === type.id
 	}
 
+	function resetState(): void {
+		for (const cat of data.categories) {
+			for (const type of cat.types) {
+				const selects: Record<string, string> = {}
+				for (const field of type.fields) {
+					for (const sel of field.selects) selects[sel.id] = sel.default
+				}
+				for (const opt of type.options) {
+					for (const field of opt.fields) {
+						for (const sel of field.selects) selects[sel.id] = sel.default
+					}
+				}
+				state[type.id].checked = type.defaultChecked
+				state[type.id].selectedOption = type.options[0]?.id ?? ''
+				for (const k of Object.keys(state[type.id].selects)) {
+					state[type.id].selects[k] = selects[k] ?? ''
+				}
+			}
+		}
+	}
+
 	return {
 		state,
 		effectivePrices,
@@ -107,5 +128,6 @@ export function useInsuranceForm(data: { categories: Category[] }) {
 		toggleType,
 		setTypeChecked,
 		isChoiceGroupStart,
+		resetState,
 	}
 }
