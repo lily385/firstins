@@ -1,5 +1,5 @@
 ﻿<template>
-	<div class="max-w-5xl mx-auto py-6 px-4 space-y-6 pb-20">
+	<div class="max-w-4xl mx-auto py-6 px-4 space-y-6 pb-36">
 		<AppStepper
 			:steps="[{ label: '車主&車輛資料' }, { label: '選擇方案&商品' }, { label: '填寫&確認資料' }, { label: '付款' }]"
 			:current="2"
