@@ -36,12 +36,11 @@
 
 					<div class="px-4 py-4 transition-opacity" :class="{ 'opacity-40 pointer-events-none': !isEnabled(type) }">
 						<!-- Checkbox row -->
-						<label class="flex items-center gap-3 cursor-pointer select-none flex-wrap">
-							<input
-								type="checkbox"
-								class="w-4 h-4 accent-cyan-900"
-								:checked="state[type.id].checked"
-								@change="handleToggle(type)"
+						<label class="flex items-center gap-3 cursor-pointer select-none flex-wrap" :for="`type-${type.id}`">
+							<Checkbox
+								:id="`type-${type.id}`"
+								:model-value="state[type.id].checked"
+								@update:model-value="(val) => handleToggle(type, Boolean(val))"
 							/>
 							<span class="flex items-center gap-1">
 								<span class="text-lg font-semibold text-gray-800">{{ type.name }}</span>
@@ -71,15 +70,10 @@
 						<div v-if="state[type.id].checked && (type.options.length || type.fields.length)" class="mt-3 ml-6 space-y-4">
 							<!-- radio: pick one option, show only selected option's fields -->
 							<template v-if="type.optionMode === 'radio'">
+								<RadioGroup v-model="state[type.id].selectedOption" class="flex flex-col gap-4">
 								<div v-for="opt in type.options" :key="opt.id" class="space-y-2">
-									<label class="flex items-center gap-3 cursor-pointer flex-wrap">
-										<input
-											type="radio"
-											class="w-4 h-4 accent-cyan-900"
-											:name="type.id"
-											:value="opt.id"
-											v-model="state[type.id].selectedOption"
-										/>
+									<label class="flex items-center gap-3 cursor-pointer flex-wrap" :for="`${type.id}-${opt.id}`">
+										<RadioGroupItem :id="`${type.id}-${opt.id}`" :value="opt.id" />
 										<span class="flex items-center gap-1">
 											<span class="text-base font-medium text-gray-700">{{ opt.name }}</span>
 											<InfoTooltip :text="opt.tooltip" />
@@ -112,19 +106,15 @@
 										</div>
 									</div>
 								</div>
+								</RadioGroup>
 							</template>
 
 							<!-- radio-always: all options shown, unselected grayed out -->
 							<template v-else-if="type.optionMode === 'radio-always'">
+								<RadioGroup v-model="state[type.id].selectedOption" class="flex flex-col gap-4">
 								<div v-for="opt in type.options" :key="opt.id" class="space-y-2">
-									<label class="flex items-center gap-3 cursor-pointer flex-wrap">
-										<input
-											type="radio"
-											class="w-4 h-4 accent-cyan-900"
-											:name="type.id"
-											:value="opt.id"
-											v-model="state[type.id].selectedOption"
-										/>
+									<label class="flex items-center gap-3 cursor-pointer flex-wrap" :for="`${type.id}-${opt.id}`">
+										<RadioGroupItem :id="`${type.id}-${opt.id}`" :value="opt.id" />
 										<span class="flex items-center gap-1">
 											<span class="text-base font-medium text-gray-700">{{ opt.name }}</span>
 											<InfoTooltip :text="opt.tooltip" />
@@ -164,6 +154,7 @@
 										</div>
 									</div>
 								</div>
+								</RadioGroup>
 							</template>
 
 							<!-- always: all sub-options always shown with their fields -->
@@ -300,6 +291,8 @@ import { formatPrice } from '../utils/formatters'
 import type { Category } from '../types/insurance'
 import InfoTooltip from './InfoTooltip.vue'
 import { Badge } from '@/components/ui/badge'
+import { Checkbox } from '@/components/ui/checkbox'
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import AppStepper from './AppStepper.vue'
 import PlanHeader from './PlanHeader.vue'
@@ -307,7 +300,7 @@ import PlanHeader from './PlanHeader.vue'
 // insuranceData is readonly; cast to mutable for the composable which only reads from it
 const data = insuranceData as unknown as { categories: Category[] }
 
-const { state, effectivePrices, effectiveOriginalPrices, isEnabled, toggleType, isChoiceGroupStart } =
+const { state, effectivePrices, effectiveOriginalPrices, isEnabled, setTypeChecked, isChoiceGroupStart } =
 	useInsuranceForm(data)
 
 const totalPremium = ref<number | null>(null)
@@ -321,8 +314,8 @@ function resetBar() {
 	totalDiscount.value = null
 }
 
-function handleToggle(type: import('../types/insurance').InsuranceType) {
-	toggleType(type)
+function handleToggle(type: import('../types/insurance').InsuranceType, newChecked: boolean) {
+	setTypeChecked(type, newChecked)
 	if (isCalculated.value) resetBar()
 }
 

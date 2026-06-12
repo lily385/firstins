@@ -79,8 +79,13 @@ export function useInsuranceForm(data: { categories: Category[] }) {
 	}
 
 	function toggleType(type: InsuranceType): void {
-		state[type.id].checked = !state[type.id].checked
-		if (type.choiceGroup !== null && state[type.id].checked) {
+		setTypeChecked(type, !state[type.id].checked)
+	}
+
+	/** Set a type's checked state to an explicit value (avoids toggle-direction bugs with controlled components). */
+	function setTypeChecked(type: InsuranceType, checked: boolean): void {
+		state[type.id].checked = checked
+		if (checked && type.choiceGroup !== null) {
 			for (const other of allTypes) {
 				if (other.id !== type.id && other.choiceGroup === type.choiceGroup) {
 					state[other.id].checked = false
@@ -100,6 +105,7 @@ export function useInsuranceForm(data: { categories: Category[] }) {
 		effectiveOriginalPrices,
 		isEnabled,
 		toggleType,
+		setTypeChecked,
 		isChoiceGroupStart,
 	}
 }
