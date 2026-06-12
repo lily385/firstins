@@ -1,5 +1,8 @@
 export interface SelectDef {
 	id: string
+	label?: string        // per-select column header (enables column layout when present)
+	tooltip?: string
+	tags?: string[]
 	choices: string[]
 	priceDelta?: number[]
 	default: string
@@ -10,6 +13,7 @@ export interface FieldDef {
 	label: string
 	tooltip?: string
 	tags?: string[]
+	note?: string   // displayed below the selects row
 	selects: SelectDef[]
 }
 

@@ -28,7 +28,7 @@ defineProps<{
         </div>
         <!-- Label -->
         <span
-          class="text-xs text-center leading-tight whitespace-nowrap"
+          class="text-sm text-center leading-tight whitespace-nowrap"
           :class="{
             'text-cyan-900 font-semibold': idx + 1 === current,
             'text-gray-500': idx + 1 < current,

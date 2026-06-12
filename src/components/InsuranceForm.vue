@@ -8,15 +8,15 @@
 		<section v-for="cat in data.categories" :key="cat.id" class="space-y-3">
 			<!-- Category heading (outside card) -->
 			<div>
-				<h3 class="text-lg font-bold text-gray-900">{{ cat.name }}</h3>
-				<p v-if="cat.description" class="mt-1 text-sm text-gray-500">{{ cat.description }}</p>
+				<h3 class="text-2xl font-semibold text-gray-900">{{ cat.name }}</h3>
+				<p v-if="cat.description" class="mt-1 text-base text-gray-500">{{ cat.description }}</p>
 			</div>
 
 			<!-- Types list -->
 			<div class="bg-white border border-gray-200 rounded-lg overflow-hidden divide-y divide-gray-100 shadow-md">
 				<!-- Category header -->
 				<div class="bg-cyan-900 px-4 py-2.5">
-					<span class="font-bold text-white text-sm">{{ cat.name }}</span>
+					<span class="font-bold text-white text-lg">{{ cat.name }}</span>
 				</div>
 
 				<template v-for="(type, typeIdx) in cat.types" :key="type.id">
@@ -25,8 +25,8 @@
 						v-if="cat.addonSectionLabel && type.mainOrAddon === '附加險' && (typeIdx === 0 || cat.types[typeIdx - 1].mainOrAddon !== '附加險')"
 						class="bg-cyan-900 px-4 py-2 flex items-center gap-2"
 					>
-						<span class="font-bold text-white text-sm">{{ cat.addonSectionLabel }}</span>
-						<span v-if="cat.addonSectionNote" class="text-xs text-gray-300">{{ cat.addonSectionNote }}</span>
+						<span class="font-bold text-white text-lg">{{ cat.addonSectionLabel }}</span>
+						<span v-if="cat.addonSectionNote" class="text-sm text-gray-300">{{ cat.addonSectionNote }}</span>
 					</div>
 
 					<!-- choiceGroup 擇一標題 -->
@@ -44,7 +44,7 @@
 								@change="handleToggle(type)"
 							/>
 							<span class="flex items-center gap-1">
-								<span class="font-semibold text-gray-800">{{ type.name }}</span>
+								<span class="text-lg font-semibold text-gray-800">{{ type.name }}</span>
 								<InfoTooltip :text="type.tooltip" />
 							</span>
 							<!-- type-level tags -->
@@ -53,11 +53,12 @@
 							</span>
 							<!-- price -->
 							<template v-if="type.priceDiscount !== null">
-								<span class="ml-auto flex flex-col items-end gap-0.5">
-									<span class="text-cyan-900 font-semibold text-sm">
-										網路優惠 {{ formatPrice(effectivePrices[type.id]!) }} 元
+								<span class="ml-auto flex flex-col items-end gap-1">
+									<span class="flex items-baseline gap-1">
+										<span class="text-sm text-cyan-900 font-medium">網路優惠</span>
+										<span class="text-xl text-cyan-900 font-bold">{{ formatPrice(effectivePrices[type.id]!) }} 元</span>
 									</span>
-									<span class="text-gray-400 text-xs line-through">
+									<span class="text-sm text-gray-400 line-through">
 										{{ formatPrice(effectiveOriginalPrices[type.id]!) }} 元
 									</span>
 								</span>
@@ -80,7 +81,7 @@
 											v-model="state[type.id].selectedOption"
 										/>
 										<span class="flex items-center gap-1">
-											<span class="text-sm font-medium text-gray-700">{{ opt.name }}</span>
+											<span class="text-base font-medium text-gray-700">{{ opt.name }}</span>
 											<InfoTooltip :text="opt.tooltip" />
 										</span>
 										<span v-if="opt.tags.length" class="flex items-center gap-1 flex-wrap">
@@ -89,20 +90,24 @@
 									</label>
 									<div v-if="state[type.id].selectedOption === opt.id && opt.fields.length" class="ml-6 space-y-3">
 										<div v-for="field in opt.fields" :key="field.id" class="space-y-1">
-											<div class="flex items-center gap-2 text-xs text-gray-800 font-semibold flex-wrap">
+											<div class="flex items-center gap-2 text-lg text-gray-800 font-semibold flex-wrap">
 												<span>{{ field.label }}</span>
 												<InfoTooltip :text="field.tooltip" />
 												<Badge v-for="tag in field.tags" :key="tag" variant="secondary">{{ tag }}</Badge>
 											</div>
-											<div class="flex gap-2 flex-wrap">
-												<select
+											<div class="flex gap-8 flex-wrap">
+												<Select
 													v-for="sel in field.selects"
 													:key="sel.id"
 													v-model="state[type.id].selects[sel.id]"
-													class="border border-gray-300 rounded px-2 py-1.5 text-sm bg-white focus:outline-none focus:ring-1 focus:ring-cyan-900"
 												>
-													<option v-for="c in sel.choices" :key="c" :value="c">{{ c }}</option>
-												</select>
+													<SelectTrigger class="h-auto py-3 text-base w-[250px]">
+														<SelectValue />
+													</SelectTrigger>
+													<SelectContent position="popper">
+														<SelectItem v-for="c in sel.choices" :key="c" :value="c">{{ c }}</SelectItem>
+													</SelectContent>
+												</Select>
 											</div>
 										</div>
 									</div>
@@ -121,7 +126,7 @@
 											v-model="state[type.id].selectedOption"
 										/>
 										<span class="flex items-center gap-1">
-											<span class="text-sm font-medium text-gray-700">{{ opt.name }}</span>
+											<span class="text-base font-medium text-gray-700">{{ opt.name }}</span>
 											<InfoTooltip :text="opt.tooltip" />
 										</span>
 										<span v-if="opt.tags.length" class="flex items-center gap-1 flex-wrap">
@@ -130,24 +135,28 @@
 									</label>
 									<div v-if="opt.fields.length" class="ml-6 space-y-3">
 										<div v-for="field in opt.fields" :key="field.id" class="space-y-1">
-											<div class="flex items-center gap-2 text-xs text-gray-800 font-semibold flex-wrap">
+											<div class="flex items-center gap-2 text-lg text-gray-800 font-semibold flex-wrap">
 												<span>{{ field.label }}</span>
 												<InfoTooltip :text="field.tooltip" />
 												<Badge v-for="tag in field.tags" :key="tag" variant="secondary">{{ tag }}</Badge>
 											</div>
-											<div class="flex gap-2 flex-wrap">
+											<div class="flex gap-8 flex-wrap">
 												<template v-if="state[type.id].selectedOption === opt.id">
-													<select
+													<Select
 														v-for="sel in field.selects"
 														:key="sel.id"
 														v-model="state[type.id].selects[sel.id]"
-														class="border border-gray-300 rounded px-2 py-1.5 text-sm bg-white focus:outline-none focus:ring-1 focus:ring-cyan-900"
 													>
-														<option v-for="c in sel.choices" :key="c" :value="c">{{ c }}</option>
-													</select>
+														<SelectTrigger class="h-auto py-3 text-base w-[250px]">
+															<SelectValue />
+														</SelectTrigger>
+														<SelectContent position="popper">
+															<SelectItem v-for="c in sel.choices" :key="c" :value="c">{{ c }}</SelectItem>
+														</SelectContent>
+													</Select>
 												</template>
 												<template v-else>
-													<span v-for="sel in field.selects" :key="sel.id" class="text-sm text-gray-400 px-2 py-1.5">{{
+													<span v-for="sel in field.selects" :key="sel.id" class="text-base text-gray-400 px-4 py-2.5">{{
 														state[type.id].selects[sel.id]
 													}}</span>
 												</template>
@@ -162,7 +171,7 @@
 								<div v-for="opt in type.options" :key="opt.id" class="space-y-2">
 									<div class="flex items-center gap-3 flex-wrap">
 										<span class="flex items-center gap-1">
-											<span class="text-sm font-medium text-gray-600">{{ opt.name }}</span>
+											<span class="text-base font-medium text-gray-600">{{ opt.name }}</span>
 											<InfoTooltip :text="opt.tooltip" />
 										</span>
 										<span v-if="opt.tags.length" class="flex items-center gap-1 flex-wrap">
@@ -171,20 +180,24 @@
 									</div>
 									<div class="ml-2 space-y-3">
 										<div v-for="field in opt.fields" :key="field.id" class="space-y-1">
-											<div class="flex items-center gap-2 text-xs text-gray-800 font-semibold flex-wrap">
+											<div class="flex items-center gap-2 text-lg text-gray-800 font-semibold flex-wrap">
 												<span>{{ field.label }}</span>
 												<InfoTooltip :text="field.tooltip" />
 												<Badge v-for="tag in field.tags" :key="tag" variant="secondary">{{ tag }}</Badge>
 											</div>
-											<div class="flex gap-2 flex-wrap">
-												<select
+											<div class="flex gap-8 flex-wrap">
+												<Select
 													v-for="sel in field.selects"
 													:key="sel.id"
 													v-model="state[type.id].selects[sel.id]"
-													class="border border-gray-300 rounded px-2 py-1.5 text-sm bg-white focus:outline-none focus:ring-1 focus:ring-cyan-900"
 												>
-													<option v-for="c in sel.choices" :key="c" :value="c">{{ c }}</option>
-												</select>
+													<SelectTrigger class="h-auto py-3 text-base w-[250px]">
+														<SelectValue />
+													</SelectTrigger>
+													<SelectContent position="popper">
+														<SelectItem v-for="c in sel.choices" :key="c" :value="c">{{ c }}</SelectItem>
+													</SelectContent>
+												</Select>
 											</div>
 										</div>
 									</div>
@@ -193,22 +206,51 @@
 
 							<!-- no options: direct fields -->
 							<template v-else>
-								<div v-for="field in type.fields" :key="field.id" class="space-y-1">
-									<div class="flex items-center gap-2 text-xs text-gray-800 font-semibold flex-wrap">
-										<span>{{ field.label }}</span>
-										<InfoTooltip :text="field.tooltip" />
-										<Badge v-for="tag in field.tags" :key="tag" variant="secondary">{{ tag }}</Badge>
-									</div>
-									<div class="flex gap-2 flex-wrap">
-										<select
-											v-for="sel in field.selects"
-											:key="sel.id"
-											v-model="state[type.id].selects[sel.id]"
-											class="border border-gray-300 rounded px-2 py-1.5 text-sm bg-white focus:outline-none focus:ring-1 focus:ring-cyan-900"
-										>
-											<option v-for="c in sel.choices" :key="c" :value="c">{{ c }}</option>
-										</select>
-									</div>
+								<div v-for="field in type.fields" :key="field.id" class="space-y-2">
+									<!-- Column mode: each select has its own label (e.g. field 31) -->
+									<template v-if="field.selects.some(s => s.label)">
+										<div class="flex gap-8 flex-wrap items-end">
+											<div v-for="sel in field.selects" :key="sel.id" class="space-y-2">
+												<div class="flex items-center gap-2 text-lg text-gray-800 font-semibold flex-wrap">
+													<span>{{ sel.label }}</span>
+													<InfoTooltip v-if="sel.tooltip" :text="sel.tooltip" />
+													<Badge v-for="tag in (sel.tags ?? [])" :key="tag" variant="secondary">{{ tag }}</Badge>
+												</div>
+												<Select v-model="state[type.id].selects[sel.id]">
+													<SelectTrigger class="h-auto py-3 text-base w-[250px]">
+														<SelectValue />
+													</SelectTrigger>
+													<SelectContent position="popper">
+														<SelectItem v-for="c in sel.choices" :key="c" :value="c">{{ c }}</SelectItem>
+													</SelectContent>
+												</Select>
+											</div>
+										</div>
+										<div v-if="field.note" class="text-sm text-red-600 mt-1">{{ field.note }}</div>
+									</template>
+									<!-- Row mode: single label above all selects -->
+									<template v-else>
+										<div class="flex items-center gap-2 text-lg text-gray-800 font-semibold flex-wrap">
+											<span>{{ field.label }}</span>
+											<InfoTooltip v-if="field.tooltip" :text="field.tooltip" />
+											<Badge v-for="tag in (field.tags ?? [])" :key="tag" variant="secondary">{{ tag }}</Badge>
+										</div>
+										<div class="flex gap-8 flex-wrap">
+											<Select
+												v-for="sel in field.selects"
+												:key="sel.id"
+												v-model="state[type.id].selects[sel.id]"
+											>
+												<SelectTrigger class="h-auto py-3 text-base w-[250px]">
+													<SelectValue />
+												</SelectTrigger>
+												<SelectContent position="popper">
+													<SelectItem v-for="c in sel.choices" :key="c" :value="c">{{ c }}</SelectItem>
+												</SelectContent>
+											</Select>
+										</div>
+										<div v-if="field.note" class="text-sm text-red-600 mt-1">{{ field.note }}</div>
+									</template>
 								</div>
 							</template>
 						</div>
@@ -250,7 +292,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import LoadingOverlay from './LoadingOverlay.vue'
 import { insuranceData } from '../store/insuranceStore'
 import { useInsuranceForm } from '../composables/useInsuranceForm'
@@ -258,6 +300,7 @@ import { formatPrice } from '../utils/formatters'
 import type { Category } from '../types/insurance'
 import InfoTooltip from './InfoTooltip.vue'
 import { Badge } from '@/components/ui/badge'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import AppStepper from './AppStepper.vue'
 import PlanHeader from './PlanHeader.vue'
 
@@ -272,14 +315,19 @@ const totalDiscount = ref<number | null>(null)
 const isLoading = ref(false)
 const isCalculated = ref(false)
 
+function resetBar() {
+	isCalculated.value = false
+	totalPremium.value = null
+	totalDiscount.value = null
+}
+
 function handleToggle(type: import('../types/insurance').InsuranceType) {
 	toggleType(type)
-	if (isCalculated.value) {
-		isCalculated.value = false
-		totalPremium.value = null
-		totalDiscount.value = null
-	}
+	if (isCalculated.value) resetBar()
 }
+
+// Reset action bar whenever any select value changes
+watch(() => state, () => { if (isCalculated.value) resetBar() }, { deep: true })
 
 async function calculate() {
 	isLoading.value = true
