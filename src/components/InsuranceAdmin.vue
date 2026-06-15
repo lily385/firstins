@@ -15,7 +15,7 @@
 		<section v-for="cat in data.categories" :key="cat.id">
 			<div class="bg-white border border-gray-200 rounded-lg overflow-hidden shadow-md">
 				<!-- Category header -->
-				<div class="bg-cyan-900 px-4 py-2.5">
+				<div class="bg-cyan-900 px-4 py-1.5.5">
 					<span class="font-bold text-white text-lg">{{ cat.name }}</span>
 				</div>
 
@@ -24,7 +24,7 @@
 					<!-- Addon sub-section header -->
 					<div
 						v-if="cat.addonSectionLabel && type.mainOrAddon === '附加險' && (typeIdx === 0 || cat.types[typeIdx - 1].mainOrAddon !== '附加險')"
-						class="bg-cyan-900 px-4 py-2 flex items-center gap-2"
+						class="bg-cyan-900 px-4 py-1.5 flex items-center gap-2"
 					>
 						<span class="font-bold text-white text-lg">{{ cat.addonSectionLabel }}</span>
 						<span v-if="cat.addonSectionNote" class="text-sm text-gray-300">{{ cat.addonSectionNote }}</span>
@@ -88,7 +88,18 @@
 							</div>
 						</div>
 
-						<!-- ③ 保額選項 -->
+						<!-- ③ 基礎保費 -->
+						<div v-if="type.priceDiscount !== null" class="space-y-1">
+							<div class="text-xs font-medium text-gray-500">基礎保費（元）</div>
+							<Input
+								type="number"
+								:value="type.priceDiscount"
+								@change="updateBasePrice(type, Number(($event.target as HTMLInputElement).value))"
+								class="w-40 py-1.5"
+							/>
+						</div>
+
+						<!-- ④ 保額選項 -->
 						<div
 							v-for="item in getAllSelects(type)"
 							:key="item.sel.id"
@@ -99,36 +110,38 @@
 								<span class="text-xs text-gray-400 font-mono">{{ item.sel.id }}</span>
 							</div>
 
-							<!-- Column labels -->
-							<div class="flex items-center gap-4 pb-1">
-								<div class="shrink-0 pl-6 text-xs text-gray-500 font-medium">數字</div>
-								<div class="w-32 shrink-0 text-xs text-gray-500 font-medium">價差</div>
-								<div class="w-14"></div>
-							</div>
-
 							<!-- Rows -->
 							<div
 								v-for="(choice, idx) in item.sel.choices"
 								:key="idx"
-								class="flex items-start gap-4 border-b border-gray-100 last:border-0 py-2"
+								class="flex items-start gap-4 border-b border-gray-100 last:border-0 py-1.5"
 							>
-								<!-- 數字 + 單位：px-6 容器，-8px gap -->
+								<!-- 選項 + 單位 -->
 								<div class="shrink-0 flex flex-col gap-1.5">
+									<div v-if="idx === 0" class="flex items-center text-xs text-gray-500 font-medium mb-1">
+										<div class="w-9 shrink-0"></div>
+										<div class="pr-6 flex items-center gap-4">
+											<div class="w-[100px]">選項</div>
+											<div class="w-[80px]">單位</div>
+										</div>
+									</div>
 									<div v-for="(part, partIdx) in parseChoice(choice)" :key="partIdx" class="flex items-center">
-										<span v-if="partIdx > 0" class="text-gray-400 text-xs select-none px-1">/</span>
-										<div class="px-6 flex items-center">
+										<div class="w-9 shrink-0 flex items-center justify-center">
+											<span v-if="partIdx === 0" class="w-5 h-5 rounded-full border border-gray-300 text-gray-500 text-xs font-medium flex items-center justify-center shrink-0">{{ idx + 1 }}</span>
+										</div>
+											<div class="pr-6 flex items-center gap-4">
 											<Input
 												type="number"
 												:value="part.num"
 												@change="updatePart(item.sel, idx, partIdx, 'num', ($event.target as HTMLInputElement).value)"
-												class="w-[150px] py-2 rounded-r-none"
+												class="w-[100px] py-1.5"
 												placeholder="數值"
 											/>
 											<Select
 												:model-value="part.unit"
 												@update:model-value="val => updatePart(item.sel, idx, partIdx, 'unit', String(val))"
 											>
-												<SelectTrigger class="w-[80px] py-2 rounded-l-none -ml-px">
+												<SelectTrigger class="w-[80px] py-1.5 text-base">
 													<SelectValue />
 												</SelectTrigger>
 												<SelectContent>
@@ -136,34 +149,45 @@
 												</SelectContent>
 											</Select>
 										</div>
-										<button
-											v-if="parseChoice(choice).length > 1"
-											@click="removePart(item.sel, idx, partIdx)"
-											class="text-red-400 hover:text-red-600 text-sm px-1 cursor-pointer leading-none"
-										>×</button>
+										<div class="w-5 shrink-0">
+											<button
+												v-if="parseChoice(choice).length > 1"
+												@click="removePart(item.sel, idx, partIdx)"
+												class="text-red-400 hover:text-red-600 cursor-pointer"
+											><X :size="14" /></button>
+										</div>
 									</div>
 									<button
 										@click="addPart(item.sel, idx)"
-										class="text-xs text-cyan-700 hover:text-cyan-900 self-start cursor-pointer pl-6"
+										class="text-xs text-cyan-700 hover:text-cyan-900 self-start cursor-pointer pl-9"
 									>+ 加段</button>
 								</div>
 
-								<!-- 價差 -->
-								<div class="w-32 shrink-0">
-									<Input
-										type="number"
-										:value="item.sel.priceDelta?.[idx] ?? 0"
-										@change="updateDelta(item.sel, idx, Number(($event.target as HTMLInputElement).value))"
-										class="w-full py-2"
-									/>
+								<!-- 價差 + 最終價格 -->
+								<div class="shrink-0">
+									<div v-if="idx === 0" class="pl-6 flex items-center gap-4 text-xs text-gray-500 font-medium mb-1">
+										<div class="w-[100px]">價差</div>
+										<div class="w-[100px]">最終價格</div>
+									</div>
+									<div class="px-6 flex items-center gap-4">
+										<Input
+											type="number"
+											:value="item.sel.priceDelta?.[idx] ?? 0"
+											@change="updateDelta(item.sel, idx, Number(($event.target as HTMLInputElement).value))"
+											class="w-[100px] py-1.5"
+										/>
+										<div class="w-[100px] py-1.5 px-3 text-base text-gray-600 bg-gray-50 rounded-lg border border-gray-200">
+											{{ (type.priceDiscount ?? 0) + (item.sel.priceDelta?.[idx] ?? 0) }} 元
+										</div>
+									</div>
 								</div>
 
 								<!-- 刪除 -->
-								<div class="w-14 shrink-0 text-right pt-1">
+								<div class="ml-auto shrink-0 pt-1">
 									<button
 										@click="deleteChoice(item.sel, idx)"
 										:disabled="item.sel.choices.length <= 1"
-										class="text-xs text-red-500 hover:text-red-700 disabled:opacity-30 disabled:cursor-not-allowed px-2 py-1 cursor-pointer"
+										class="text-xs text-red-500 border border-red-400 hover:bg-red-50 disabled:opacity-30 disabled:cursor-not-allowed px-3 py-1.5 rounded-lg cursor-pointer transition-colors"
 									>
 										刪除
 									</button>
@@ -191,6 +215,12 @@ import { insuranceMutableData as data, resetData, saveData } from '../store/insu
 import type { InsuranceType, FieldDef, SelectDef } from '../types/insurance'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { X } from '@lucide/vue'
+
+function updateBasePrice(type: InsuranceType, value: number): void {
+	type.priceDiscount = value
+	saveData()
+}
 
 function getAllSelects(type: InsuranceType): { fieldLabel: string; sel: SelectDef }[] {
 	const result: { fieldLabel: string; sel: SelectDef }[] = []

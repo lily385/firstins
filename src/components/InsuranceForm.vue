@@ -145,7 +145,7 @@
 														<SelectValue />
 													</SelectTrigger>
 													<SelectContent position="popper">
-														<SelectItem v-for="c in sel.choices" :key="c" :value="c">{{ c }}</SelectItem>
+														<SelectItem v-for="c in validChoices(sel.choices)" :key="c" :value="c">{{ c }}</SelectItem>
 													</SelectContent>
 												</Select>
 											</div>
@@ -187,7 +187,7 @@
 															<SelectValue />
 														</SelectTrigger>
 														<SelectContent position="popper">
-															<SelectItem v-for="c in sel.choices" :key="c" :value="c">{{ c }}</SelectItem>
+															<SelectItem v-for="c in validChoices(sel.choices)" :key="c" :value="c">{{ c }}</SelectItem>
 														</SelectContent>
 													</Select>
 												</template>
@@ -232,7 +232,7 @@
 														<SelectValue />
 													</SelectTrigger>
 													<SelectContent position="popper">
-														<SelectItem v-for="c in sel.choices" :key="c" :value="c">{{ c }}</SelectItem>
+														<SelectItem v-for="c in validChoices(sel.choices)" :key="c" :value="c">{{ c }}</SelectItem>
 													</SelectContent>
 												</Select>
 											</div>
@@ -258,7 +258,7 @@
 														<SelectValue />
 													</SelectTrigger>
 													<SelectContent position="popper">
-														<SelectItem v-for="c in sel.choices" :key="c" :value="c">{{ c }}</SelectItem>
+														<SelectItem v-for="c in validChoices(sel.choices)" :key="c" :value="c">{{ c }}</SelectItem>
 													</SelectContent>
 												</Select>
 											</div>
@@ -282,7 +282,7 @@
 													<SelectValue />
 												</SelectTrigger>
 												<SelectContent position="popper">
-													<SelectItem v-for="c in sel.choices" :key="c" :value="c">{{ c }}</SelectItem>
+													<SelectItem v-for="c in validChoices(sel.choices)" :key="c" :value="c">{{ c }}</SelectItem>
 												</SelectContent>
 											</Select>
 										</div>
@@ -356,6 +356,10 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import AppStepper from './AppStepper.vue'
 import PlanHeader from './PlanHeader.vue'
+
+function validChoices(choices: string[]): string[] {
+	return choices.filter(c => c.trim() !== '' && c.split('/').every(seg => /^\d/.test(seg)))
+}
 
 // insuranceData is readonly; cast to mutable for the composable which only reads from it
 const data = insuranceData as unknown as { categories: Category[] }
