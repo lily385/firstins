@@ -99,10 +99,10 @@
 								<span class="text-xs text-gray-400 font-mono">{{ item.sel.id }}</span>
 							</div>
 
-							<!-- Header -->
-							<div class="flex items-center gap-4 text-xs text-gray-500 border-b border-gray-200 pb-1">
-								<div class="shrink-0">選項名稱</div>
-								<div class="w-32 shrink-0">價差（元）</div>
+							<!-- Column labels -->
+							<div class="flex items-center gap-4 pb-1">
+								<div class="shrink-0 pl-6 text-xs text-gray-500 font-medium">數字</div>
+								<div class="w-32 shrink-0 text-xs text-gray-500 font-medium">價差</div>
 								<div class="w-14"></div>
 							</div>
 
@@ -112,28 +112,30 @@
 								:key="idx"
 								class="flex items-start gap-4 border-b border-gray-100 last:border-0 py-2"
 							>
-								<!-- 選項名稱：shrink-0，寬度由內容決定 -->
+								<!-- 數字 + 單位：px-6 容器，-8px gap -->
 								<div class="shrink-0 flex flex-col gap-1.5">
-									<div v-for="(part, partIdx) in parseChoice(choice)" :key="partIdx" class="flex items-center gap-1">
-										<span v-if="partIdx > 0" class="text-gray-400 text-xs select-none">/</span>
-										<Input
-											type="number"
-											:value="part.num"
-											@change="updatePart(item.sel, idx, partIdx, 'num', ($event.target as HTMLInputElement).value)"
-											class="w-20 py-2"
-											placeholder="數值"
-										/>
-										<Select
-											:model-value="part.unit"
-											@update:model-value="val => updatePart(item.sel, idx, partIdx, 'unit', String(val))"
-										>
-											<SelectTrigger class="w-auto py-2">
-												<SelectValue />
-											</SelectTrigger>
-											<SelectContent>
-												<SelectItem v-for="u in UNITS" :key="u" :value="u">{{ u }}</SelectItem>
-											</SelectContent>
-										</Select>
+									<div v-for="(part, partIdx) in parseChoice(choice)" :key="partIdx" class="flex items-center">
+										<span v-if="partIdx > 0" class="text-gray-400 text-xs select-none px-1">/</span>
+										<div class="px-6 flex items-center">
+											<Input
+												type="number"
+												:value="part.num"
+												@change="updatePart(item.sel, idx, partIdx, 'num', ($event.target as HTMLInputElement).value)"
+												class="w-[150px] py-2 rounded-r-none"
+												placeholder="數值"
+											/>
+											<Select
+												:model-value="part.unit"
+												@update:model-value="val => updatePart(item.sel, idx, partIdx, 'unit', String(val))"
+											>
+												<SelectTrigger class="w-[80px] py-2 rounded-l-none -ml-px">
+													<SelectValue />
+												</SelectTrigger>
+												<SelectContent>
+													<SelectItem v-for="u in UNITS" :key="u" :value="u">{{ u }}</SelectItem>
+												</SelectContent>
+											</Select>
+										</div>
 										<button
 											v-if="parseChoice(choice).length > 1"
 											@click="removePart(item.sel, idx, partIdx)"
@@ -142,7 +144,7 @@
 									</div>
 									<button
 										@click="addPart(item.sel, idx)"
-										class="text-xs text-cyan-700 hover:text-cyan-900 self-start cursor-pointer"
+										class="text-xs text-cyan-700 hover:text-cyan-900 self-start cursor-pointer pl-6"
 									>+ 加段</button>
 								</div>
 
