@@ -327,7 +327,7 @@
 				</div>
 			</div>
 			<!-- 分隔線：mobile 顯示，desktop 隱藏 -->
-			<hr class="sm:hidden border-gray-200" />
+			<hr class="sm:hidden border-gray-200 my-3" />
 			<!-- buttons: mobile 各佔 50%，desktop 固定寬 -->
 			<div class="flex items-center gap-3 sm:gap-6 shrink-0 sm:order-1">
 				<button class="flex-1 sm:flex-none sm:w-60 py-2 rounded-lg border-2 border-cyan-900 text-cyan-900 text-lg font-semibold hover:bg-cyan-50 transition-colors cursor-pointer">
