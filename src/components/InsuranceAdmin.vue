@@ -113,20 +113,24 @@
 											<div class="flex flex-col gap-1.5">
 												<div v-for="(part, partIdx) in parseChoice(choice)" :key="partIdx" class="flex items-center gap-1">
 													<span v-if="partIdx > 0" class="text-gray-400 text-xs select-none">/</span>
-													<input
+													<Input
 														type="number"
 														:value="part.num"
 														@change="updatePart(item.sel, idx, partIdx, 'num', ($event.target as HTMLInputElement).value)"
-														class="w-16 border border-gray-300 rounded px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-cyan-900"
+														class="w-20 py-2"
 														placeholder="數值"
 													/>
-													<select
-														:value="part.unit"
-														@change="updatePart(item.sel, idx, partIdx, 'unit', ($event.target as HTMLSelectElement).value)"
-														class="border border-gray-300 rounded px-1.5 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-cyan-900"
+													<Select
+														:model-value="part.unit"
+														@update:model-value="val => updatePart(item.sel, idx, partIdx, 'unit', String(val))"
 													>
-														<option v-for="u in UNITS" :key="u" :value="u">{{ u }}</option>
-													</select>
+														<SelectTrigger class="w-auto py-2">
+															<SelectValue />
+														</SelectTrigger>
+														<SelectContent>
+															<SelectItem v-for="u in UNITS" :key="u" :value="u">{{ u }}</SelectItem>
+														</SelectContent>
+													</Select>
 													<button
 														v-if="parseChoice(choice).length > 1"
 														@click="removePart(item.sel, idx, partIdx)"
@@ -139,12 +143,12 @@
 												>+ 加段</button>
 											</div>
 										</td>
-										<td class="py-1 pr-3">
-											<input
+										<td class="py-2 pr-3">
+											<Input
 												type="number"
 												:value="item.sel.priceDelta?.[idx] ?? 0"
 												@change="updateDelta(item.sel, idx, Number(($event.target as HTMLInputElement).value))"
-												class="w-full border border-gray-300 rounded px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-cyan-900"
+												class="w-full py-2"
 											/>
 										</td>
 										<td class="py-1 text-right">
@@ -179,6 +183,8 @@
 <script setup lang="ts">
 import { insuranceMutableData as data, resetData, saveData } from '../store/insuranceStore'
 import type { InsuranceType, FieldDef, SelectDef } from '../types/insurance'
+import { Input } from '@/components/ui/input'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 
 function getAllSelects(type: InsuranceType): { fieldLabel: string; sel: SelectDef }[] {
 	const result: { fieldLabel: string; sel: SelectDef }[] = []
