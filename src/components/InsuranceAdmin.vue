@@ -99,70 +99,74 @@
 								<span class="text-xs text-gray-400 font-mono">{{ item.sel.id }}</span>
 							</div>
 
-							<table class="w-full text-sm border-collapse">
-								<thead>
-									<tr class="text-xs text-gray-500 border-b border-gray-200">
-										<th class="text-left pb-1 pr-3 font-medium">選項名稱</th>
-										<th class="text-left pb-1 pr-3 font-medium w-32">價差（元）</th>
-										<th class="pb-1 w-14"></th>
-									</tr>
-								</thead>
-								<tbody>
-									<tr v-for="(choice, idx) in item.sel.choices" :key="idx" class="border-b border-gray-100 last:border-0">
-										<td class="py-2 pr-3">
-											<div class="flex flex-col gap-1.5">
-												<div v-for="(part, partIdx) in parseChoice(choice)" :key="partIdx" class="flex items-center gap-1">
-													<span v-if="partIdx > 0" class="text-gray-400 text-xs select-none">/</span>
-													<Input
-														type="number"
-														:value="part.num"
-														@change="updatePart(item.sel, idx, partIdx, 'num', ($event.target as HTMLInputElement).value)"
-														class="w-20 py-2"
-														placeholder="數值"
-													/>
-													<Select
-														:model-value="part.unit"
-														@update:model-value="val => updatePart(item.sel, idx, partIdx, 'unit', String(val))"
-													>
-														<SelectTrigger class="w-auto py-2">
-															<SelectValue />
-														</SelectTrigger>
-														<SelectContent>
-															<SelectItem v-for="u in UNITS" :key="u" :value="u">{{ u }}</SelectItem>
-														</SelectContent>
-													</Select>
-													<button
-														v-if="parseChoice(choice).length > 1"
-														@click="removePart(item.sel, idx, partIdx)"
-														class="text-red-400 hover:text-red-600 text-sm px-1 cursor-pointer leading-none"
-													>×</button>
-												</div>
-												<button
-													@click="addPart(item.sel, idx)"
-													class="text-xs text-cyan-700 hover:text-cyan-900 self-start cursor-pointer"
-												>+ 加段</button>
-											</div>
-										</td>
-										<td class="py-2 pr-3">
-											<Input
-												type="number"
-												:value="item.sel.priceDelta?.[idx] ?? 0"
-												@change="updateDelta(item.sel, idx, Number(($event.target as HTMLInputElement).value))"
-												class="w-full py-2"
-											/>
-										</td>
-										<td class="py-1 text-right">
-											<button
-												@click="deleteChoice(item.sel, idx)"
-												:disabled="item.sel.choices.length <= 1"
-												class="text-xs text-red-500 hover:text-red-700 disabled:opacity-30 disabled:cursor-not-allowed px-2 py-1 cursor-pointer"
-											>
-												刪除
-											</button>
-										</td>
-									</tr>
-								</tbody>
-							</table>
+							<!-- Header -->
+							<div class="flex items-center gap-4 text-xs text-gray-500 border-b border-gray-200 pb-1">
+								<div class="shrink-0">選項名稱</div>
+								<div class="w-32 shrink-0">價差（元）</div>
+								<div class="w-14"></div>
+							</div>
+
+							<!-- Rows -->
+							<div
+								v-for="(choice, idx) in item.sel.choices"
+								:key="idx"
+								class="flex items-start gap-4 border-b border-gray-100 last:border-0 py-2"
+							>
+								<!-- 選項名稱：shrink-0，寬度由內容決定 -->
+								<div class="shrink-0 flex flex-col gap-1.5">
+									<div v-for="(part, partIdx) in parseChoice(choice)" :key="partIdx" class="flex items-center gap-1">
+										<span v-if="partIdx > 0" class="text-gray-400 text-xs select-none">/</span>
+										<Input
+											type="number"
+											:value="part.num"
+											@change="updatePart(item.sel, idx, partIdx, 'num', ($event.target as HTMLInputElement).value)"
+											class="w-20 py-2"
+											placeholder="數值"
+										/>
+										<Select
+											:model-value="part.unit"
+											@update:model-value="val => updatePart(item.sel, idx, partIdx, 'unit', String(val))"
+										>
+											<SelectTrigger class="w-auto py-2">
+												<SelectValue />
+											</SelectTrigger>
+											<SelectContent>
+												<SelectItem v-for="u in UNITS" :key="u" :value="u">{{ u }}</SelectItem>
+											</SelectContent>
+										</Select>
+										<button
+											v-if="parseChoice(choice).length > 1"
+											@click="removePart(item.sel, idx, partIdx)"
+											class="text-red-400 hover:text-red-600 text-sm px-1 cursor-pointer leading-none"
+										>×</button>
+									</div>
+									<button
+										@click="addPart(item.sel, idx)"
+										class="text-xs text-cyan-700 hover:text-cyan-900 self-start cursor-pointer"
+									>+ 加段</button>
+								</div>
+
+								<!-- 價差 -->
+								<div class="w-32 shrink-0">
+									<Input
+										type="number"
+										:value="item.sel.priceDelta?.[idx] ?? 0"
+										@change="updateDelta(item.sel, idx, Number(($event.target as HTMLInputElement).value))"
+										class="w-full py-2"
+									/>
+								</div>
+
+								<!-- 刪除 -->
+								<div class="w-14 shrink-0 text-right pt-1">
+									<button
+										@click="deleteChoice(item.sel, idx)"
+										:disabled="item.sel.choices.length <= 1"
+										class="text-xs text-red-500 hover:text-red-700 disabled:opacity-30 disabled:cursor-not-allowed px-2 py-1 cursor-pointer"
+									>
+										刪除
+									</button>
+								</div>
+							</div>
 
 							<button
 								@click="addChoice(item.sel)"
