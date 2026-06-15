@@ -65,7 +65,7 @@
 									</span>
 								</div>
 								<!-- description note -->
-								<div v-if="gType.description" class="mt-1 ml-8 text-xs text-red-600">{{ gType.description }}</div>
+								<div v-if="gType.description" class="mt-1 ml-8 text-sm text-red-600">{{ gType.description }}</div>
 								<!-- Mobile price -->
 								<div v-if="gType.priceDiscount !== null" class="flex sm:hidden flex-col items-end gap-1 mt-4" :class="{ 'opacity-40': !state[gType.id].checked }">
 									<span class="flex items-baseline gap-1">
@@ -110,7 +110,7 @@
 							</span>
 						</div>
 						<!-- description note -->
-						<div v-if="type.description" class="mt-1 ml-6 text-xs text-red-600">{{ type.description }}</div>
+						<div v-if="type.description" class="mt-1 ml-6 text-sm text-red-600">{{ type.description }}</div>
 
 						<!-- Expanded content when checked -->
 						<div v-if="state[type.id].checked && (type.options.length || type.fields.length)" class="mt-3 ml-6 space-y-4">
