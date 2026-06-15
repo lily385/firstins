@@ -314,7 +314,7 @@
 	<div class="fixed bottom-0 left-0 right-0 z-40 bg-white border-t border-gray-200 shadow-[0_-4px_12px_rgba(0,0,0,0.1)]">
 		<div class="max-w-3xl mx-auto px-4 sm:px-6 py-3 sm:py-5 flex flex-col sm:flex-row sm:items-center">
 			<!-- price info: mobile 在上方，desktop 在右側 -->
-			<div class="flex flex-col mb-3 sm:mb-0 sm:ml-auto sm:shrink-0 sm:w-52 sm:pl-8 sm:order-2">
+			<div class="flex flex-col sm:ml-auto sm:shrink-0 sm:w-52 sm:pl-8 sm:order-2">
 				<div class="flex items-center justify-between gap-3">
 					<span class="text-xs text-gray-500 whitespace-nowrap">優惠金額</span>
 					<span class="text-red-600 font-semibold text-sm whitespace-nowrap">
