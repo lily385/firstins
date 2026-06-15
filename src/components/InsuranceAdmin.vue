@@ -109,13 +109,35 @@
 								</thead>
 								<tbody>
 									<tr v-for="(choice, idx) in item.sel.choices" :key="idx" class="border-b border-gray-100 last:border-0">
-										<td class="py-1 pr-3">
-											<input
-												type="text"
-												:value="choice"
-												@change="updateChoice(item.sel, idx, ($event.target as HTMLInputElement).value)"
-												class="w-full border border-gray-300 rounded px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-cyan-900"
-											/>
+										<td class="py-2 pr-3">
+											<div class="flex flex-col gap-1.5">
+												<div v-for="(part, partIdx) in parseChoice(choice)" :key="partIdx" class="flex items-center gap-1">
+													<span v-if="partIdx > 0" class="text-gray-400 text-xs select-none">/</span>
+													<input
+														type="number"
+														:value="part.num"
+														@change="updatePart(item.sel, idx, partIdx, 'num', ($event.target as HTMLInputElement).value)"
+														class="w-16 border border-gray-300 rounded px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-cyan-900"
+														placeholder="數值"
+													/>
+													<select
+														:value="part.unit"
+														@change="updatePart(item.sel, idx, partIdx, 'unit', ($event.target as HTMLSelectElement).value)"
+														class="border border-gray-300 rounded px-1.5 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-cyan-900"
+													>
+														<option v-for="u in UNITS" :key="u" :value="u">{{ u }}</option>
+													</select>
+													<button
+														v-if="parseChoice(choice).length > 1"
+														@click="removePart(item.sel, idx, partIdx)"
+														class="text-red-400 hover:text-red-600 text-sm px-1 cursor-pointer leading-none"
+													>×</button>
+												</div>
+												<button
+													@click="addPart(item.sel, idx)"
+													class="text-xs text-cyan-700 hover:text-cyan-900 self-start cursor-pointer"
+												>+ 加段</button>
+											</div>
 										</td>
 										<td class="py-1 pr-3">
 											<input
@@ -170,6 +192,42 @@ function getAllSelects(type: InsuranceType): { fieldLabel: string; sel: SelectDe
 }
 
 const ALL_TAGS = ['保對方', '對方', '保我方乘客', '對方車或財物', '保自己', '額外保障', '保本車']
+
+const UNITS = ['元', '萬元', '倍型']
+
+interface Part {
+	num: string
+	unit: string
+}
+
+function parseChoice(choice: string): Part[] {
+	return choice.split('/').map(segment => {
+		const m = segment.match(/^(\d*(?:\.\d+)?)(元|萬元|倍型)$/)
+		return m ? { num: m[1], unit: m[2] } : { num: segment, unit: '萬元' }
+	})
+}
+
+function assembleChoice(parts: Part[]): string {
+	return parts.map(p => `${p.num}${p.unit}`).join('/')
+}
+
+function updatePart(sel: SelectDef, choiceIdx: number, partIdx: number, field: 'num' | 'unit', value: string): void {
+	const parts = parseChoice(sel.choices[choiceIdx])
+	parts[partIdx] = { ...parts[partIdx], [field]: value }
+	updateChoice(sel, choiceIdx, assembleChoice(parts))
+}
+
+function addPart(sel: SelectDef, choiceIdx: number): void {
+	const parts = parseChoice(sel.choices[choiceIdx])
+	parts.push({ num: '', unit: '萬元' })
+	updateChoice(sel, choiceIdx, assembleChoice(parts))
+}
+
+function removePart(sel: SelectDef, choiceIdx: number, partIdx: number): void {
+	const parts = parseChoice(sel.choices[choiceIdx])
+	parts.splice(partIdx, 1)
+	updateChoice(sel, choiceIdx, assembleChoice(parts))
+}
 
 function toggleFieldTag(field: FieldDef, tag: string): void {
 	if (!field.tags) field.tags = []
