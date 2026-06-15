@@ -102,9 +102,9 @@
 							<table class="w-full text-sm border-collapse">
 								<thead>
 									<tr class="text-xs text-gray-500 border-b border-gray-200">
-										<th class="text-left pb-1 pr-3 font-medium w-1/2">選項名稱</th>
-										<th class="text-left pb-1 pr-3 font-medium w-1/4">價差（元）</th>
-										<th class="pb-1 w-1/4"></th>
+										<th class="text-left pb-1 pr-3 font-medium">選項名稱</th>
+										<th class="text-left pb-1 pr-3 font-medium w-32">價差（元）</th>
+										<th class="pb-1 w-14"></th>
 									</tr>
 								</thead>
 								<tbody>
